@@ -10,6 +10,7 @@
 import SwiftUI
 
 struct OrderSuccessView: View {
+    @EnvironmentObject var cartManager: CartManager
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -44,11 +45,15 @@ struct OrderSuccessView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
+        .onAppear {
+            // When this view appears, the order is complete, so clear the cart.
+            cartManager.clearCart()
+        }
     }
 }
 
 struct OrderSuccessView_Previews: PreviewProvider {
     static var previews: some View {
-        OrderSuccessView()
+        OrderSuccessView().environmentObject(CartManager())
     }
 }

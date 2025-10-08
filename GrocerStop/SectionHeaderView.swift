@@ -7,24 +7,14 @@
 
 
 
-
 import SwiftUI
 
 struct SectionHeaderView: View {
     let title: String
-    
     var body: some View {
         Text(title)
-            .font(.title2)
-            .fontWeight(.bold)
-            .padding(.top, 5)
-    }
-}
-
-struct SectionHeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        SectionHeaderView(title: "Example Section")
-            .padding()
-            .previewLayout(.sizeThatFits)
+            .font(.title2).fontWeight(.bold).padding(.vertical, 8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.background)
     }
 }

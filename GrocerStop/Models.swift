@@ -6,33 +6,77 @@
 //
 
 
-
-
-
 import Foundation
 
-struct Promotion: Identifiable {
-    let id = UUID()
-    let imageName: String
+// Enum for Product Categories to ensure type safety.
+enum ProductCategory: String, Codable, CaseIterable, Identifiable {
+    case dairy = "Dairy & Bread", snacks = "Snacks & Munchies", fruits = "Fruits"
+    case vegetables = "Vegetables", meat = "Meat", bakery = "Bakery"
+    case beverages = "Beverages", frozen = "Frozen", staples = "Staples"
+    case featured = "Featured Products"
+    var id: String { self.rawValue }
 }
 
-struct Category: Identifiable {
+struct Promotion: Identifiable, Codable, Hashable {
     let id = UUID()
     let imageName: String
-    let name: String
+    let destinationCategory: ProductCategory
 }
 
-struct Product: Identifiable {
+struct Category: Identifiable, Equatable {
     let id = UUID()
     let imageName: String
+    let name: ProductCategory
+}
+
+struct Product: Identifiable, Codable, Hashable {
+    @CodableUUID var id: UUID
+    let imageURL: String?
     let name: String
     let description: String
     let price: String
+    let category: ProductCategory
 }
 
-// Make Product conform to Equatable so we can find it in arrays.
-extension Product: Equatable {
-    static func == (lhs: Product, rhs: Product) -> Bool {
-        return lhs.id == rhs.id
+@propertyWrapper
+struct CodableUUID: Codable, Hashable {
+    var wrappedValue: UUID
+    init(wrappedValue: UUID) { self.wrappedValue = wrappedValue }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let uuidString = try container.decode(String.self)
+        guard let uuid = UUID(uuidString: uuidString) else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid UUID string")
+        }
+        self.wrappedValue = uuid
+    }
+    
+    // --- CORRECTION ---
+    // Added the encode(to:) method to make the type fully conform to Codable.
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(wrappedValue.uuidString)
+    }
+}
+
+
+struct CartItem: Identifiable, Codable, Hashable {
+    var id: UUID { product.id }
+    let product: Product
+    var quantity: Int
+}
+
+struct Order: Identifiable, Codable, Hashable {
+    let id: UUID
+    let orderDate: Date
+    let items: [CartItem]
+    let totalPrice: Double
+    
+    var formattedOrderDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: orderDate)
     }
 }

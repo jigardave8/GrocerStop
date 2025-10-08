@@ -1,0 +1,90 @@
+[
+    {
+        "id": "A4E08643-4161-4569-906D-1E25686A3993",
+        "imageURL": "https://images.pexels.com/photos/2229074/pexels-photo-2229074.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Fresh Milk",
+        "description": "1L, 3.25% Fat",
+        "price": "$2.50",
+        "category": "Dairy & Bread"
+    },
+    {
+        "id": "F5E052CA-0205-4B80-8E17-80B042F0219D",
+        "imageURL": "https://images.pexels.com/photos/1359002/pexels-photo-1359002.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "White Bread",
+        "description": "500g, Sliced",
+        "price": "$3.00",
+        "category": "Dairy & Bread"
+    },
+    {
+        "id": "2A53896B-061B-45F4-A013-4D90F9B4D942",
+        "imageURL": "https://images.pexels.com/photos/162712/egg-white-food-protein-162712.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Organic Eggs",
+        "description": "12 pack, Free Range",
+        "price": "$5.50",
+        "category": "Dairy & Bread"
+    },
+    {
+        "id": "B1E7E552-3294-4712-B09A-8756E8A834E3",
+        "imageURL": "https://images.pexels.com/photos/103565/pexels-photo-103565.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Salted Butter",
+        "description": "250g Block",
+        "price": "$4.00",
+        "category": "Dairy & Bread"
+    },
+    {
+        "id": "C77A38C6-4C51-4E6E-9A96-41983BD940F8",
+        "imageURL": "https://images.pexels.com/photos/827513/pexels-photo-827513.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Cheddar Cheese",
+        "description": "400g Block",
+        "price": "$6.20",
+        "category": "Dairy & Bread"
+    },
+    {
+        "id": "E6D2B1C2-8D99-4A73-A3B9-5561E63C01E9",
+        "imageURL": "https://images.pexels.com/photos/4039169/pexels-photo-4039169.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Potato Chips",
+        "description": "Large Salted",
+        "price": "$3.75",
+        "category": "Snacks & Munchies"
+    },
+    {
+        "id": "D2A9B935-71D5-4F54-934E-1457F9B94716",
+        "imageURL": "https://images.pexels.com/photos/4109128/pexels-photo-4109128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Dairy Milk Bar",
+        "description": "100g Bar",
+        "price": "$2.00",
+        "category": "Snacks & Munchies"
+    },
+    {
+        "id": "A1C3C586-77F8-4A1C-9E5B-D08D235F3A5C",
+        "imageURL": "https://images.pexels.com/photos/714736/pexels-photo-714736.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Orange Juice",
+        "description": "1.5L, Pulp Free",
+        "price": "$4.20",
+        "category": "Snacks & Munchies"
+    },
+    {
+        "id": "C0A4384B-179B-4D88-B5A1-E7E599811C28",
+        "imageURL": "https://images.pexels.com/photos/209271/pexels-photo-209271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Red Apples",
+        "description": "1kg Bag",
+        "price": "$4.50",
+        "category": "Fruits"
+    },
+    {
+        "id": "B1E9C85C-1D3E-4B7E-9F93-0F7D7B1C8D4A",
+        "imageURL": "https://images.pexels.com/photos/61127/pexels-photo-61127.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Bananas",
+        "description": "Bunch of 5",
+        "price": "$2.10",
+        "category": "Fruits"
+    },
+    {
+        "id": "D4E4A2A1-0E4D-4F18-9F3C-E7E9E8D1A3F1",
+        "imageURL": "https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "name": "Chicken Breast",
+        "description": "500g, Boneless",
+        "price": "$9.50",
+        "category": "Meat"
+    }
+]

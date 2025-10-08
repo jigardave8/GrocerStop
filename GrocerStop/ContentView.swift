@@ -6,15 +6,34 @@
 //
 
 
-
-
 import SwiftUI
 
+// This struct uniquely identifies a flying animation instance.
+struct FlyingProduct: Identifiable, Equatable {
+    let id: UUID
+    let product: Product
+}
+
+// PreferenceKey to find the global position of the cart tab icon.
+struct CartTabPreferenceKey: PreferenceKey {
+    static var defaultValue: CGPoint = .zero
+    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {
+        // We only care about the first non-zero value.
+        if value == .zero {
+            value = nextValue()
+        }
+    }
+}
+
 struct ContentView: View {
+    @EnvironmentObject var cartManager: CartManager
+    @State private var flyingProduct: FlyingProduct?
+    @State private var cartTabPosition: CGPoint = .zero
+
     var body: some View {
         TabView {
             // --- Home Tab ---
-            HomeView()
+            HomeView(flyingProduct: $flyingProduct)
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
@@ -22,91 +41,47 @@ struct ContentView: View {
             // --- Cart Tab ---
             CartView()
                 .tabItem {
-                    Label("Cart", systemImage: "cart.fill")
+                    Label {
+                        Text("Cart")
+                    } icon: {
+                        Image(systemName: "cart.fill")
+                            .background(
+                                GeometryReader { geo in
+                                    Color.clear.preference(
+                                        key: CartTabPreferenceKey.self,
+                                        value: CGPoint(x: geo.frame(in: .global).midX, y: geo.frame(in: .global).midY)
+                                    )
+                                }
+                            )
+                    }
                 }
+                .badge(cartManager.items.count > 0 ? "\(cartManager.items.count)" : nil)
+
+            // --- Other Tabs ---
+            Text("Placeholder for future functionality.")
+                .font(.title3)
+                .tabItem { Label("Search", systemImage: "magnifyingglass") }
             
-            // --- Search Tab (Placeholder) ---
-            Text("Search functionality will be built here.")
-                .font(.title)
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
-            
-            // --- My Orders Tab (Placeholder) ---
-            Text("Past orders will be displayed here.")
-                .font(.title)
-                .tabItem {
-                    Label("Orders", systemImage: "list.bullet")
-                }
+            AccountView()
+                .tabItem { Label("Account", systemImage: "person.fill") }
         }
-    }
-}
-
-// The original content of ContentView has been moved into its own HomeView
-struct HomeView: View {
-    @EnvironmentObject var cartManager: CartManager
-
-    // Sample Data - In a real app, this would come from a ViewModel
-    let promotions = [
-        Promotion(imageName: "promo1"),
-        Promotion(imageName: "promo2"),
-        Promotion(imageName: "promo3")
-    ]
-    
-    let categories = [
-        Category(imageName: "fruits", name: "Fruits"),
-        Category(imageName: "vegetables", name: "Vegetables"),
-        Category(imageName: "dairy", name: "Dairy"),
-        Category(imageName: "meat", name: "Meat"),
-        Category(imageName: "bakery", name: "Bakery"),
-        Category(imageName: "snacks", name: "Snacks"),
-        Category(imageName: "beverages", name: "Beverages"),
-        Category(imageName: "frozen", name: "Frozen"),
-        Category(imageName: "staples", name: "Staples")
-    ]
-    
-    let products = [
-        Product(imageName: "milk", name: "Milk", description: "1L", price: "$2.50"),
-        Product(imageName: "bread", name: "White Bread", description: "500g", price: "$3.00"),
-        Product(imageName: "eggs", name: "Organic Eggs", description: "12 pack", price: "$5.50"),
-        Product(imageName: "butter", name: "Salted Butter", description: "250g", price: "$4.00")
-    ]
-    
-    let snackProducts = [
-        Product(imageName: "chips", name: "Potato Chips", description: "Large Pack", price: "$3.75"),
-        Product(imageName: "chocolate", name: "Dairy Milk", description: "100g Bar", price: "$2.00"),
-        Product(imageName: "juice", name: "Orange Juice", description: "1.5L Bottle", price: "$4.20")
-    ]
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    HeaderView()
-                    SearchBarView()
-                    
-                    PromotionCarouselView(promotions: promotions)
-                        .frame(height: 180)
-                        .padding(.vertical, 8)
-                    
-                    SectionHeaderView(title: "Shop by category")
-                    CategoryGridView(categories: categories)
-                    
-                    SectionHeaderView(title: "Dairy & Bread")
-                    ProductListView(products: products)
-                        .padding(.bottom)
-                    
-                    SectionHeaderView(title: "Snacks & Munchies")
-                    ProductListView(products: snackProducts)
-                    
-                    Spacer()
-                }
-                .padding(.horizontal)
+        .onPreferenceChange(CartTabPreferenceKey.self) { position in
+            if position != .zero {
+                cartTabPosition = position
             }
-            .navigationBarHidden(true)
+        }
+        .overlay(alignment: .topLeading) {
+            if let flyingItem = flyingProduct {
+                // --- CORRECTION ---
+                // The parameter label for the completion handler is 'onAnimationFinished'.
+                ProductFlyAnimationView(product: flyingItem.product, endPosition: cartTabPosition, onAnimationFinished: {
+                    self.flyingProduct = nil
+                })
+            }
         }
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

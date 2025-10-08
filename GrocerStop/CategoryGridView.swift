@@ -6,20 +6,26 @@
 //
 
 
-
-
 import SwiftUI
 
 struct CategoryGridView: View {
     let categories: [Category]
     
+    // --- CORRECTION ---
+    // This property is needed to pass down to the detail view.
+    let allProducts: [Product]
+
     private let gridLayout: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHGrid(rows: gridLayout, spacing: 10) {
                  ForEach(categories) { category in
-                    CategoryView(category: category)
+                    // Each CategoryView is now a NavigationLink
+                    NavigationLink(destination: CategoryDetailView(category: category, allProducts: allProducts)) {
+                        CategoryView(category: category)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                  }
             }
             .padding(.vertical, 5)
@@ -33,7 +39,6 @@ struct CategoryView: View {
     
     var body: some View {
         VStack {
-            // Remember to add images named "fruits", etc., to Assets.xcassets
             Image(category.imageName)
                 .resizable()
                 .scaledToFit()
@@ -41,7 +46,7 @@ struct CategoryView: View {
                 .cornerRadius(10)
                 .padding(4)
 
-            Text(category.name)
+            Text(category.name.rawValue)
                 .font(.caption)
                 .multilineTextAlignment(.center)
                 .lineLimit(1)
@@ -52,11 +57,9 @@ struct CategoryView: View {
 
 struct CategoryGridView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryGridView(categories: [
-            Category(imageName: "fruits", name: "Fruits"),
-            Category(imageName: "vegetables", name: "Vegetables"),
-            Category(imageName: "dairy", name: "Dairy")
-        ])
-        .previewLayout(.sizeThatFits)
+        NavigationView {
+            CategoryGridView(categories: MockDataSource.categories, allProducts: MockDataSource.products)
+                .environmentObject(CartManager())
+        }
     }
 }

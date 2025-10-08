@@ -7,7 +7,6 @@
 
 
 
-
 import SwiftUI
 
 struct HeaderView: View {
@@ -25,9 +24,12 @@ struct HeaderView: View {
                     .foregroundColor(.gray)
             }
             Spacer()
-            Image(systemName: "person.circle")
-                .font(.title)
-                .foregroundColor(.gray)
+            // The person icon is now a link to the AccountView
+            NavigationLink(destination: AccountView()) {
+                Image(systemName: "person.circle")
+                    .font(.title)
+                    .foregroundColor(.gray)
+            }
         }
         .padding(.top, 10)
     }
@@ -35,7 +37,10 @@ struct HeaderView: View {
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView()
-            .previewLayout(.sizeThatFits)
+        // To make the preview work, we need a NavigationView
+        NavigationView {
+            HeaderView()
+        }
+        .previewLayout(.sizeThatFits)
     }
 }

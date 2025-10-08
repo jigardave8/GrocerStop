@@ -11,12 +11,16 @@ import SwiftUI
 
 struct ProductListView: View {
     let products: [Product]
-    
+    @Binding var flyingProduct: FlyingProduct? // State for animation
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 15) {
                 ForEach(products) { product in
-                    ProductCardView(product: product)
+                    NavigationLink(destination: ProductDetailView(product: product)) {
+                        ProductCardView(product: product, flyingProduct: $flyingProduct)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
         }
@@ -26,45 +30,43 @@ struct ProductListView: View {
 struct ProductCardView: View {
     @EnvironmentObject var cartManager: CartManager
     let product: Product
+    @Binding var flyingProduct: FlyingProduct?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Remember to add images named "milk", etc., to Assets.xcassets
-            Image(product.imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 120)
-                .clipped()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
-                .padding(.bottom, 4)
+            AsyncImage(url: URL(string: product.imageURL ?? "")) { image in
+                image.resizable()
+            } placeholder: {
+                ZStack {
+                    Color.gray.opacity(0.1)
+                    ProgressView()
+                }
+            }
+            .aspectRatio(contentMode: .fill)
+            .frame(height: 120)
+            .clipped()
+            .cornerRadius(10)
+            .padding(.bottom, 4)
 
             Text(product.name)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .lineLimit(1)
+                .font(.subheadline).fontWeight(.medium).lineLimit(1)
             
             Text(product.description)
-                .font(.caption)
-                .foregroundColor(.gray)
-                .lineLimit(1)
+                .font(.caption).foregroundColor(.gray).lineLimit(1)
 
             HStack {
-                Text(product.price)
-                    .font(.subheadline)
-                    .fontWeight(.bold)
+                Text(product.price).font(.subheadline).fontWeight(.bold)
                 Spacer()
                 Button(action: {
                     cartManager.addToCart(product: product)
+                    // --- CORRECTION 2 ---
+                    // The FlyingProduct struct now has a unique 'id' and the 'product' itself.
+                    flyingProduct = FlyingProduct(id: UUID(), product: product)
                 }) {
-                    Text("Add")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 15)
-                        .padding(.vertical, 6)
+                    Text("Add").font(.caption).fontWeight(.semibold)
+                        .padding(.horizontal, 15).padding(.vertical, 6)
                         .background(Color.green.opacity(0.15))
-                        .foregroundColor(.green)
-                        .cornerRadius(8)
+                        .foregroundColor(.green).cornerRadius(8)
                 }
             }
         }
@@ -76,13 +78,13 @@ struct ProductCardView: View {
     }
 }
 
-
 struct ProductListView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductListView(products: [
-            Product(imageName: "milk", name: "Milk", description: "1L", price: "$2.50")
-        ])
-        .environmentObject(CartManager())
-        .previewLayout(.sizeThatFits)
+        NavigationView {
+            ProductListView(
+                products: MockDataSource.products.filter { $0.category == .dairy },
+                flyingProduct: .constant(nil)
+            )
+        }.environmentObject(CartManager())
     }
 }

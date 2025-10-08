@@ -6,17 +6,22 @@
 //
 
 
+
 import SwiftUI
 
 @main
 struct GrocerStopApp: App {
-    // Create the cart manager once and pass it down the view hierarchy.
     @StateObject private var cartManager = CartManager()
+    @StateObject private var orderManager = OrderManager()
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = AppStorageManager.hasCompletedOnboarding
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(cartManager) // Make it available to all child views
+            if hasCompletedOnboarding {
+                ContentView().environmentObject(cartManager).environmentObject(orderManager)
+            } else {
+                OnboardingView()
+            }
         }
     }
 }
